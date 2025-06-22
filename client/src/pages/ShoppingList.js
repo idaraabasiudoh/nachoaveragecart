@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { FiTrash2, FiRefreshCw } from 'react-icons/fi';
 import { shoppingLists, products } from '../services/api';
 import toast from 'react-hot-toast';
 
 const ShoppingList = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [list, setList] = useState(null);
   const [loading, setLoading] = useState(true);
   const [loadingMeals, setLoadingMeals] = useState(false);
@@ -121,14 +122,23 @@ const ShoppingList = () => {
             )}
             
             {list.items.length > 0 && (
-              <button
-                onClick={() => generateMealSuggestions()}
-                disabled={loadingMeals}
-                className="mt-6 flex items-center gap-2 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 disabled:opacity-50"
-              >
-                <FiRefreshCw className={loadingMeals ? 'animate-spin' : ''} />
-                Generate Meal Suggestions
-              </button>
+              <div className="mt-6 flex flex-col sm:flex-row gap-3">
+                <button
+                  onClick={() => generateMealSuggestions()}
+                  disabled={loadingMeals}
+                  className="flex items-center justify-center gap-2 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 disabled:opacity-50"
+                >
+                  <FiRefreshCw className={loadingMeals ? 'animate-spin' : ''} />
+                  Generate Meal Suggestions
+                </button>
+                <button
+                  onClick={() => navigate(`/ingredient-selector/${id}`)}
+                  className="flex items-center justify-center gap-2 px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700"
+                >
+                  <span>🍽️</span>
+                  Interactive Ingredient Selector
+                </button>
+              </div>
             )}
           </div>
         </div>
