@@ -1,9 +1,30 @@
 version: 1
-backend:
+frontend:
   phases:
+    preBuild:
+      commands:
+        - echo "Starting frontend build"
+        - cd client
+        - npm install
     build:
       commands:
-        - cd server
+        - npm run build
+  artifacts:
+    baseDirectory: client/build
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - client/node_modules/**/*
+backend:
+  phases:
+    preBuild:
+      commands:
+        - echo "Starting backend build"
+        - cd ../server
+        - pwd
+    build:
+      commands:
         - npm install
     postBuild:
       commands:
@@ -12,23 +33,3 @@ backend:
     baseDirectory: server
     files:
       - '**/*'
-frontend:
-  phases:
-    preBuild:
-      commands:
-        - cd client
-        - npm install
-    build:
-      commands:
-        - cd client
-        - npm run build
-    postBuild:
-      commands:
-        - echo "Frontend build completed"
-  artifacts:
-    baseDirectory: client/build
-    files:
-      - '**/*'
-  cache:
-    paths:
-      - client/node_modules/**/*
