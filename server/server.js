@@ -15,7 +15,15 @@ const API_PREFIX = '';
 
 
 // Middleware
-app.use(cors());
+// Set up CORS based on environment
+const corsOptions = process.env.NODE_ENV === 'production' 
+  ? {
+      origin: ['https://nachoaveragecart.com', 'https://www.nachoaveragecart.com'],
+      credentials: true
+    }
+  : { origin: true, credentials: true }; // Allow all origins in development
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
