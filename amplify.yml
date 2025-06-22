@@ -5,7 +5,6 @@ backend:
       commands:
         - cd server
         - npm install
-        - npm run build
     postBuild:
       commands:
         - echo "Backend build completed"
