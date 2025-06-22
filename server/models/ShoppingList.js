@@ -17,6 +17,7 @@ const shoppingListSchema = new mongoose.Schema({
       price: Number,
       source: String,
       link: String,
+      redirect_link: String,
       thumbnail: String,
       rating: Number,
       reviews: Number
