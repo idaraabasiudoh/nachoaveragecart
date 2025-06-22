@@ -42,7 +42,7 @@ exports.processImage = async (req, res) => {
     const imageData = await fs.readFile(imagePath);
 
     // Process with Gemini
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro-vision' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
     
     const prompt = `Extract all grocery items from this shopping list image. 
     Return only a JSON array of item names, nothing else. 
@@ -120,7 +120,7 @@ exports.getMealSuggestions = async (req, res) => {
     }
 
     const model = genAI.getGenerativeModel({ 
-      model: 'gemini-1.5-pro',
+      model: 'gemini-2.5-flash',
       generationConfig: {
         temperature: 0.2,
         topP: 0.8,
@@ -172,12 +172,28 @@ exports.getMealSuggestions = async (req, res) => {
     });
     
     // Extract the text from the response
-    const text = result.response.text();
+    let text = result.response.text();
     
-    // Parse the JSON response
-    const meals = JSON.parse(text);
-
-    res.json({ meals });
+    // Clean the response if it contains markdown code blocks
+    if (text.includes('```json')) {
+      // Extract content between ```json and ``` markers
+      const jsonMatch = text.match(/```json\s*([\s\S]*?)```/);
+      if (jsonMatch && jsonMatch[1]) {
+        text = jsonMatch[1].trim();
+      }
+    }
+    
+    // Additional cleanup for any other markdown or text artifacts
+    text = text.replace(/^\s*```\s*|\s*```\s*$/g, '').trim();
+    
+    try {
+      // Parse the JSON response
+      const meals = JSON.parse(text);
+      res.json({ meals });
+    } catch (parseError) {
+      console.error('JSON parsing error:', parseError, '\nRaw text:', text);
+      res.status(500).json({ error: 'Failed to parse meal suggestions response' });
+    }
   } catch (error) {
     console.error('Meal suggestion error:', error);
     res.status(500).json({ error: 'Failed to get meal suggestions' });
