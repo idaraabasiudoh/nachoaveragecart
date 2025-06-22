@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import Logo from '../components/Logo';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -41,7 +42,11 @@ const Login = () => {
   return (
     <div className="max-w-md mx-auto mt-10">
       <div className="bg-white rounded-lg shadow-md p-8">
-        <h1 className="text-2xl font-bold text-center mb-6">Login to GroceryAI</h1>
+        <div className="flex flex-col items-center mb-6">
+          <Logo size="md" />
+          <h1 className="text-2xl font-bold text-center mt-4">Nacho-Average Cart</h1>
+          <p className="text-gray-600 text-center mt-2">Smart grocery shopping made simple</p>
+        </div>
         
         {error && (
           <div className="bg-red-50 text-red-600 p-3 rounded-md mb-4">

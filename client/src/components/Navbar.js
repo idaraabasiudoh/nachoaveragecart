@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiHome, FiSearch, FiShoppingCart, FiLogOut } from 'react-icons/fi';
 import { useAuth } from '../contexts/AuthContext';
+import Logo from './Logo';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -20,8 +21,9 @@ const Navbar = () => {
     <nav className="bg-white shadow-md">
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
-          <Link to="/" className="flex items-center">
-            <span className="text-xl font-bold text-primary-600">GroceryAI</span>
+          <Link to="/" className="flex items-center space-x-2">
+            <Logo size="sm" />
+            <span className="text-xl font-bold text-primary-600">Nacho-Average Cart</span>
           </Link>
 
           <div className="flex items-center space-x-4">
