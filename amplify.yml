@@ -14,11 +14,17 @@ backend:
       - '**/*'
 frontend:
   phases:
-    build:
+    preBuild:
       commands:
         - cd client
         - npm install
+    build:
+      commands:
+        - cd client
         - npm run build
+    postBuild:
+      commands:
+        - echo "Frontend build completed"
   artifacts:
     baseDirectory: client/build
     files:
