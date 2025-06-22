@@ -8,6 +8,7 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import ProductSearch from './pages/ProductSearch';
 import ShoppingList from './pages/ShoppingList';
+import IngredientSelector from './pages/IngredientSelector';
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -32,6 +33,7 @@ function App() {
               <Route path="/" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
               <Route path="/search" element={<PrivateRoute><ProductSearch /></PrivateRoute>} />
               <Route path="/list/:id" element={<PrivateRoute><ShoppingList /></PrivateRoute>} />
+              <Route path="/ingredient-selector/:id" element={<PrivateRoute><IngredientSelector /></PrivateRoute>} />
             </Routes>
           </main>
           <Toaster position="top-right" />
