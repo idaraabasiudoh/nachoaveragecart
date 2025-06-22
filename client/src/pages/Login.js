@@ -41,7 +41,7 @@ const Login = () => {
   return (
     <div className="max-w-md mx-auto mt-10">
       <div className="bg-white rounded-lg shadow-md p-8">
-        <h1 className="text-2xl font-bold text-center mb-6">Login to GroceryAI</h1>
+        <h1 className="text-2xl font-bold text-center mb-6">Login to Nacho-Average Cart</h1>
         
         {error && (
           <div className="bg-red-50 text-red-600 p-3 rounded-md mb-4">
