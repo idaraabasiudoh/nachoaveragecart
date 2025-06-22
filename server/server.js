@@ -10,8 +10,8 @@ const shoppingListRoutes = require('./routes/shoppingList');
 
 const app = express();
 
-// Support for AWS Amplify path prefix
-const API_PREFIX = process.env.NODE_ENV === 'production' ? '/api' : '';
+// In production, we don't need a prefix since we're using a subdomain
+const API_PREFIX = '';
 
 
 // Middleware
@@ -21,9 +21,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Routes
-app.use(`${API_PREFIX}/api/auth`, authRoutes);
-app.use(`${API_PREFIX}/api/products`, productRoutes);
-app.use(`${API_PREFIX}/api/shopping-lists`, shoppingListRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/shopping-lists', shoppingListRoutes);
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {
