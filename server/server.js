@@ -38,9 +38,27 @@ app.use((err, req, res, next) => {
 });
 
 // Database connection
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.error('MongoDB connection error:', err));
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/nachoaveragecart';
+
+// Log connection string (without credentials) for debugging
+const sanitizedUri = MONGODB_URI.replace(
+  /mongodb(\+srv)?:\/\/([^:]+:[^@]+@)?([^\/]+)(.*)/,
+  (_, srv, auth, host) => `mongodb${srv || ''}://${auth ? '***:***@' : ''}${host}/***`
+);
+console.log(`Attempting to connect to MongoDB at ${sanitizedUri}`);
+
+// Connect with options suitable for production
+mongoose.connect(MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  serverSelectionTimeoutMS: 5000
+})
+  .then(() => console.log('MongoDB connected successfully'))
+  .catch(err => {
+    console.error('MongoDB connection error:', err);
+    console.log('Please ensure you have set the correct MONGODB_URI environment variable');
+    console.log('For Render deployment, you should use a MongoDB Atlas connection string');
+  });
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
