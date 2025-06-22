@@ -9,10 +9,11 @@ frontend:
     build:
       commands:
         - npm run build
+        - pwd
   artifacts:
-    baseDirectory: nachoaveragecart/client/build
+    baseDirectory: client/build
     files:
-      - '**/*'
+      - "**/*"
   cache:
     paths:
       - nachoaveragecart/client/node_modules/**/*
@@ -21,7 +22,7 @@ backend:
     preBuild:
       commands:
         - echo "Starting backend build"
-        - ls -la $CODEBUILD_SRC_DIR/nachoaveragecart  # List contents of your project folder
+        - ls -la $CODEBUILD_SRC_DIR/nachoaveragecart # List contents of your project folder
         - |
           if [ -d "$CODEBUILD_SRC_DIR/nachoaveragecart/server" ]; then
             cd $CODEBUILD_SRC_DIR/nachoaveragecart/server
@@ -43,4 +44,4 @@ backend:
   artifacts:
     baseDirectory: nachoaveragecart
     files:
-      - '**/*'
+      - "**/*"
