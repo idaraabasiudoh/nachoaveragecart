@@ -21,7 +21,19 @@ backend:
     preBuild:
       commands:
         - echo "Starting backend build"
-        - cd $CODEBUILD_SRC_DIR/server
+        - ls -la $CODEBUILD_SRC_DIR  # List contents to see what directories exist
+        - |
+          if [ -d "$CODEBUILD_SRC_DIR/server" ]; then
+            cd $CODEBUILD_SRC_DIR/server
+          else
+            echo "Server directory not found, checking for backend folder"
+            if [ -d "$CODEBUILD_SRC_DIR/backend" ]; then
+              cd $CODEBUILD_SRC_DIR/backend
+            else
+              echo "Neither server nor backend directory found"
+              exit 1
+            fi
+          fi
         - pwd
     build:
       commands:
