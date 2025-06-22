@@ -4,35 +4,34 @@ frontend:
     preBuild:
       commands:
         - echo "Starting frontend build"
-        - cd $CODEBUILD_SRC_DIR/client
+        - cd $CODEBUILD_SRC_DIR/nachoaveragecart/client
         - npm install
     build:
       commands:
         - npm run build
   artifacts:
-    baseDirectory: client/build
+    baseDirectory: nachoaveragecart/client/build
     files:
       - '**/*'
   cache:
     paths:
-      - client/node_modules/**/*
+      - nachoaveragecart/client/node_modules/**/*
 backend:
   phases:
     preBuild:
       commands:
         - echo "Starting backend build"
-        - ls -la $CODEBUILD_SRC_DIR  # List contents to see what directories exist
+        - ls -la $CODEBUILD_SRC_DIR/nachoaveragecart  # List contents of your project folder
         - |
-          if [ -d "$CODEBUILD_SRC_DIR/server" ]; then
-            cd $CODEBUILD_SRC_DIR/server
+          if [ -d "$CODEBUILD_SRC_DIR/nachoaveragecart/server" ]; then
+            cd $CODEBUILD_SRC_DIR/nachoaveragecart/server
+          elif [ -d "$CODEBUILD_SRC_DIR/nachoaveragecart/backend" ]; then
+            cd $CODEBUILD_SRC_DIR/nachoaveragecart/backend
+          elif [ -d "$CODEBUILD_SRC_DIR/nachoaveragecart/api" ]; then
+            cd $CODEBUILD_SRC_DIR/nachoaveragecart/api
           else
-            echo "Server directory not found, checking for backend folder"
-            if [ -d "$CODEBUILD_SRC_DIR/backend" ]; then
-              cd $CODEBUILD_SRC_DIR/backend
-            else
-              echo "Neither server nor backend directory found"
-              exit 1
-            fi
+            echo "Backend directory not found, staying in project root"
+            cd $CODEBUILD_SRC_DIR/nachoaveragecart
           fi
         - pwd
     build:
@@ -42,6 +41,6 @@ backend:
       commands:
         - echo "Backend build completed"
   artifacts:
-    baseDirectory: server
+    baseDirectory: nachoaveragecart
     files:
       - '**/*'
