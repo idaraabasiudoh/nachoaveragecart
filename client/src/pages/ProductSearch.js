@@ -19,9 +19,10 @@ const ProductSearch = () => {
     setLoading(true);
     try {
       const response = await products.search(searchQuery);
+      // Create a new object with the new search at the beginning
       setSearchResults({
-        ...searchResults,
-        [searchQuery]: response.data.products
+        [searchQuery]: response.data.products,
+        ...searchResults
       });
       setSearchQuery('');
     } catch (error) {
@@ -45,13 +46,18 @@ const ProductSearch = () => {
       const items = imageResponse.data.items;
 
       // Search for each item
+      let newResults = {};
       for (const item of items) {
         const searchResponse = await products.search(item);
-        setSearchResults(prev => ({
-          ...prev,
-          [item]: searchResponse.data.products
-        }));
+        // Add each new item to the beginning of the results object
+        newResults[item] = searchResponse.data.products;
       }
+      
+      // Update state with new items first, then existing items
+      setSearchResults(prev => ({
+        ...newResults,
+        ...prev
+      }));
 
       toast.success(`Found ${items.length} items in image`);
     } catch (error) {
