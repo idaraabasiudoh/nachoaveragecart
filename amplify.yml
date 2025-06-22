@@ -1,31 +1,47 @@
 version: 1
-backend:
+frontend:
   phases:
+    preBuild:
+      commands:
+        - echo "Starting frontend build"
+        - cd $CODEBUILD_SRC_DIR/nachoaveragecart/client
+        - npm install --include=dev
     build:
       commands:
-        - cd server
+        - npm run build
+        - pwd
+  artifacts:
+    baseDirectory: client/build
+    files:
+      - "**/*"
+  cache:
+    paths:
+      - nachoaveragecart/client/node_modules/**/*
+backend:
+  phases:
+    preBuild:
+      commands:
+        - echo "Starting backend build"
+        - ls -la $CODEBUILD_SRC_DIR/nachoaveragecart # List contents of your project folder
+        - |
+          if [ -d "$CODEBUILD_SRC_DIR/nachoaveragecart/server" ]; then
+            cd $CODEBUILD_SRC_DIR/nachoaveragecart/server
+          elif [ -d "$CODEBUILD_SRC_DIR/nachoaveragecart/backend" ]; then
+            cd $CODEBUILD_SRC_DIR/nachoaveragecart/backend
+          elif [ -d "$CODEBUILD_SRC_DIR/nachoaveragecart/api" ]; then
+            cd $CODEBUILD_SRC_DIR/nachoaveragecart/api
+          else
+            echo "Backend directory not found, staying in project root"
+            cd $CODEBUILD_SRC_DIR/nachoaveragecart
+          fi
+        - pwd
+    build:
+      commands:
         - npm install
     postBuild:
       commands:
         - echo "Backend build completed"
   artifacts:
-    baseDirectory: server
+    baseDirectory: nachoaveragecart
     files:
-      - '**/*'
-frontend:
-  phases:
-    preBuild:
-      commands:
-        - cd client
-        - npm install
-    build:
-      commands:
-        - cd client
-        - npm run build
-  artifacts:
-    baseDirectory: client/build
-    files:
-      - '**/*'
-  cache:
-    paths:
-      - client/node_modules/**/*
+      - "**/*"
