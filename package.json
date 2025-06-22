@@ -1,0 +1,20 @@
+{
+  "name": "nacho-average-cart",
+  "version": "1.0.0",
+  "description": "Nacho-Average Cart - A smart shopping list application",
+  "scripts": {
+    "start": "cd server && npm start",
+    "start:client": "cd client && npm start",
+    "start:server": "cd server && npm start",
+    "build": "npm run build:client",
+    "build:client": "cd client && npm install && npm run build",
+    "build:server": "cd server && npm install",
+    "dev": "concurrently \"npm run start:server\" \"npm run start:client\"",
+    "install:all": "npm install && npm run install:client && npm run install:server",
+    "install:client": "cd client && npm install",
+    "install:server": "cd server && npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.0.1"
+  }
+}

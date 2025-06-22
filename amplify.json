@@ -1,0 +1,19 @@
+{
+  "projectName": "nachoaveragecart",
+  "envName": "prod",
+  "defaultEditor": "code",
+  "appId": "nachoaveragecart",
+  "frontend": "javascript",
+  "javascript": {
+    "framework": "react",
+    "config": {
+      "SourceDir": "client/src",
+      "DistributionDir": "client/build",
+      "BuildCommand": "npm run build:client",
+      "StartCommand": "npm run start:client"
+    }
+  },
+  "providers": [
+    "awscloudformation"
+  ]
+}

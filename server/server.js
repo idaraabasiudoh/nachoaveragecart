@@ -10,6 +10,10 @@ const shoppingListRoutes = require('./routes/shoppingList');
 
 const app = express();
 
+// Support for AWS Amplify path prefix
+const API_PREFIX = process.env.NODE_ENV === 'production' ? '/api' : '';
+
+
 // Middleware
 app.use(cors());
 app.use(express.json());
@@ -17,9 +21,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/products', productRoutes);
-app.use('/api/shopping-lists', shoppingListRoutes);
+app.use(`${API_PREFIX}/api/auth`, authRoutes);
+app.use(`${API_PREFIX}/api/products`, productRoutes);
+app.use(`${API_PREFIX}/api/shopping-lists`, shoppingListRoutes);
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {
@@ -60,7 +64,13 @@ mongoose.connect(MONGODB_URI, {
     console.log('For Render deployment, you should use a MongoDB Atlas connection string');
   });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// Only start the server if this file is run directly (not imported by lambda.js)
+if (require.main === module) {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
+
+// Export the app for AWS Lambda
+module.exports = app;
