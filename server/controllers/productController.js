@@ -134,8 +134,8 @@ exports.searchProducts = async (req, res) => {
         title: result.title,
         price: result.extracted_price || result.price,
         source: result.source,
-        link: result.link || sourceUrl,
-        redirect_link: result.redirect_link || result.link || sourceUrl,
+        link: result.product_link,
+        redirect_link: result.product_link,
         thumbnail: result.thumbnail,
         rating: result.rating,
         reviews: result.reviews

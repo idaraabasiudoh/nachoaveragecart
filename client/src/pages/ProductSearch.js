@@ -181,7 +181,7 @@ const ProductSearch = () => {
                     redirect_link: product.redirect_link,
                     hasLink: !!product.link,
                     hasRedirectLink: !!product.redirect_link,
-                    linkToUse: product.redirect_link || product.link
+                    linkToUse: product.redirect_link || product.link || product.product_link
                   });
                   
                   return (
@@ -210,7 +210,7 @@ const ProductSearch = () => {
                       </div>
                       <div className="mt-3">
                         <a 
-                          href={product.redirect_link || product.link || `https://www.google.com/search?q=${encodeURIComponent(product.title)}`} 
+                          href={product.product_link || product.link || `https://www.google.com/search?q=${encodeURIComponent(product.title)}`} 
                           target="_blank" 
                           rel="noopener noreferrer"
                           onClick={(e) => e.stopPropagation()}
