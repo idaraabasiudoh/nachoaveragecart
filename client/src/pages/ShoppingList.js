@@ -109,6 +109,16 @@ const ShoppingList = () => {
                       <p className="text-xs text-gray-500 mt-1">
                         Search: "{item.searchQuery}"
                       </p>
+                      {item.product.redirect_link && (
+                        <a 
+                          href={item.product.redirect_link} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-xs text-blue-600 hover:text-blue-800 hover:underline flex items-center mt-1"
+                        >
+                          View Product <span className="ml-1">↗</span>
+                        </a>
+                      )}
                     </div>
                     <button
                       onClick={() => removeItem(item._id)}

@@ -19,6 +19,7 @@ const ProductSearch = () => {
     setLoading(true);
     try {
       const response = await products.search(searchQuery);
+      console.log('Search response products:', response.data.products);
       // Create a new object with the new search at the beginning
       setSearchResults({
         [searchQuery]: response.data.products,
@@ -173,6 +174,16 @@ const ProductSearch = () => {
                   const itemId = `${query}-${product.title}`;
                   const isSelected = selectedItems.some(item => item.id === itemId);
                   
+                  // Debug logging for each product
+                  console.log(`Product ${index} details:`, {
+                    title: product.title,
+                    link: product.link,
+                    redirect_link: product.redirect_link,
+                    hasLink: !!product.link,
+                    hasRedirectLink: !!product.redirect_link,
+                    linkToUse: product.redirect_link || product.link || product.product_link
+                  });
+                  
                   return (
                     <div
                       key={index}
@@ -193,12 +204,21 @@ const ProductSearch = () => {
                         ${product.price?.toFixed(2) || 'N/A'}
                       </p>
                       <p className="text-sm text-gray-600">{product.source}</p>
-                      {product.rating && (
-                        <div className="mt-2 text-sm">
-                          <span className="text-yellow-500">★</span> {product.rating}
-                          {product.reviews && ` (${product.reviews} reviews)`}
-                        </div>
-                      )}
+                      <div className="mt-2 text-sm">
+                        <span className="text-yellow-500">★</span> {product.rating}
+                        {product.reviews && ` (${product.reviews} reviews)`}
+                      </div>
+                      <div className="mt-3">
+                        <a 
+                          href={product.product_link || product.link || `https://www.google.com/search?q=${encodeURIComponent(product.title)}`} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="text-sm text-blue-600 hover:text-blue-800 hover:underline flex items-center"
+                        >
+                          View Product <span className="ml-1">↗</span>
+                        </a>
+                      </div>
                     </div>
                   );
                 })}

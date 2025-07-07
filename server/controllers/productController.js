@@ -87,6 +87,8 @@ exports.searchProducts = async (req, res) => {
       return res.status(400).json({ error: 'Search query required' });
     }
 
+    console.log('Search query:', query);
+    
     const searchResults = await getJson({
       engine: 'google_shopping',
       q: query,
@@ -94,15 +96,52 @@ exports.searchProducts = async (req, res) => {
       num: 10
     });
 
-    const products = searchResults.shopping_results?.map(result => ({
-      title: result.title,
-      price: result.extracted_price || result.price,
-      source: result.source,
-      link: result.link,
-      thumbnail: result.thumbnail,
-      rating: result.rating,
-      reviews: result.reviews
-    })) || [];
+    console.log('SerpAPI response structure:', Object.keys(searchResults));
+    console.log('Shopping results count:', searchResults.shopping_results?.length || 0);
+    
+    if (searchResults.shopping_results && searchResults.shopping_results.length > 0) {
+      // Log the first result to see its structure
+      console.log('Sample result structure:', Object.keys(searchResults.shopping_results[0]));
+      console.log('Sample result link:', searchResults.shopping_results[0].link);
+      console.log('Sample result redirect_link:', searchResults.shopping_results[0].redirect_link);
+    }
+
+    const products = searchResults.shopping_results?.map(result => {
+      // Create a source URL if no link is available
+      let sourceUrl = null;
+      if (result.source) {
+        // Convert source name to a valid URL if needed
+        if (!result.source.startsWith('http')) {
+          // Common shopping sites
+          if (result.source.toLowerCase().includes('amazon')) {
+            sourceUrl = 'https://www.amazon.com';
+          } else if (result.source.toLowerCase().includes('walmart')) {
+            sourceUrl = 'https://www.walmart.com';
+          } else if (result.source.toLowerCase().includes('target')) {
+            sourceUrl = 'https://www.target.com';
+          } else if (result.source.toLowerCase().includes('ebay')) {
+            sourceUrl = 'https://www.ebay.com';
+          } else {
+            // Generic fallback
+            sourceUrl = `https://www.google.com/search?q=${encodeURIComponent(result.title)}`;
+          }
+        } else {
+          sourceUrl = result.source;
+        }
+      }
+      
+      const product = {
+        title: result.title,
+        price: result.extracted_price || result.price,
+        source: result.source,
+        link: result.product_link,
+        redirect_link: result.product_link,
+        thumbnail: result.thumbnail,
+        rating: result.rating,
+        reviews: result.reviews
+      };
+      return product;
+    }) || [];
 
     res.json({ query, products });
   } catch (error) {
